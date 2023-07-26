@@ -12,7 +12,7 @@ recommendations: false
 ---
 # ROWNUMBER
 
-Returns the unique ranking for the current context within the specified partition, sorted by the specified order. If a match cannot be found then then rownumber is blank.
+Returns the unique ranking for the current context within the specified partition, sorted by the specified order. If a match cannot be found then the rownumber is blank.
   
 ## Syntax  
   
@@ -26,7 +26,7 @@ ROWNUMBER ( [<relation>][, <orderBy>][, <blanks>][, <partitionBy>][, <matchBy>] 
 |--------|--------------|  
 |relation|(Optional) A table expression from which the output row is returned. </br>If specified, all columns in \<orderBy> and \<partitionBy> must come from it. </br>If omitted: </br>- \<orderBy> must be explicitly specified.</br>- All \<orderBy> and \<partitionBy> columns must be fully qualified and come from a single table. </br>- Defaults to ALLSELECTED() of all columns in \<orderBy> and \<partitionBy>.|
 |orderBy|(Optional) An ORDERBY() clause containing the columns that define how each partition is sorted. </br>If omitted: </br>- \<relation> must be explicitly specified. </br>- Defaults to ordering by every column in \<relation> that is not already specified in \<partitionBy>.|
-|blanks|(Optional) An enumeration that defines how to handle blank values when sorting. </br>The supported values are:<ul><li>DEFAULT (the default value), where the behavior for numerical values is blank values are ordered between zero and negative values. The behavior for strings is blank values are ordered before all strings, including empty strings.</li><li>FIRST, blanks are always ordered on the beginning, regardless of ascending or descending sorting order.</li><li>LAST, blanks are always ordered on the end, regardless of ascending or descending sorting order. </li></ul></br>Note, when \<blanks> parameter and blanks in ORDERBY() function on individual expression are both specified, \<blanks> on individual orderBy expression takes priority for the relevant orderBy expression, and orderBy expressions without \<blanks> being specified will honor \<blanks> parameter on parent Window function.|
+|blanks|(Optional) An enumeration that defines how to handle blank values when sorting. </br>The supported values are: <ul><li>DEFAULT (the default value), where the behavior for numerical values is blank values are ordered between zero and negative values. The behavior for strings is blank values are ordered before all strings, including empty strings.</li><li>FIRST, blanks are always ordered at the beginning, regardless of ascending or descending sorting order.</li><li>LAST, blanks are always ordered on the end, regardless of ascending or descending sorting order. </li></ul></br>Note, when \<blanks> parameter and blanks in ORDERBY() function on individual expression are both specified, \<blanks> on individual orderBy expression takes priority for the relevant orderBy expression, and orderBy expressions without \<blanks> being specified will honor \<blanks> parameter on parent Window function.|
 |partitionBy|(Optional) A PARTITIONBY() clause containing the columns that define how \<relation> is partitioned. </br> If omitted, \<relation> is treated as a single partition. |  
 |matchBy|(Optional) A MATCHBY() clause containing the columns that define how to match data and identify the current row. |  
 
@@ -45,12 +45,12 @@ Each \<orderBy>, \<partitionBy>, and \<matchBy> column must have a corresponding
   - ROWNUMBER’s final output is a union of these rows.
 - If there is more than one corresponding outer column, an error is returned.
 
-If \<matchBy> is present, then ROWNUMBER will try to use columns in \<matchBy> and \<partitionBy> to idenfity the current row.  
+If \<matchBy> is present, then ROWNUMBER will try to use columns in \<matchBy> and \<partitionBy> to identify the current row.  
 If the columns specified within \<orderBy> and \<partitionBy> cannot uniquely identify every row in \<relation>, then:
 
-- ROWNUMBER will try to find the least number of additional columns required to uniquely identify every row.
+- ROWNUMBER will try to find the least number of additional columns required to identify every row uniquely.
 - If such columns can be found, ROWNUMBER will
-  - Try to find the least number of additional columns required to uniquely identify every row.
+  - Try to find the least number of additional columns required to identify every row uniquely.
   - Automatically append these new columns to \<orderBy> clause.
   - Sort each partition using this new set of orderBy columns.
 - If such columns cannot be found and the function detects a tie at runtime, an error is returned.
